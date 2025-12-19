@@ -1,0 +1,394 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    overflow-x: hidden;
+    /* Prevent horizontal overflow */
+}
+
+.playerWrapper {
+    width: 100%;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    /* Essential for control bar positioning */
+    box-shadow: 0 0 30px rgba(0, 242, 254, 0.2);
+    border: 1px solid rgba(0, 242, 254, 0.1);
+}
+
+/* When in normal mode with static controls below, flatten bottom corners */
+.playerWrapper:not(:fullscreen):not(:-webkit-full-screen) {
+    border-radius: 12px 12px 0 0;
+    border-bottom: none;
+}
+
+.iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    position: relative;
+    z-index: 1;
+}
+
+.thumbnailWrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.thumbnailWrapper:hover {
+    transform: scale(1.02);
+}
+
+.thumbnail {
+    object-fit: cover;
+    transition: filter 0.3s ease;
+}
+
+.thumbnailWrapper:hover .thumbnail {
+    filter: brightness(0.6);
+}
+
+.playOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.playButton {
+    width: 80px;
+    height: 80px;
+    background: rgba(0, 242, 254, 0.8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 30px rgba(0, 242, 254, 0.5);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: scale(0.9);
+    opacity: 0.8;
+}
+
+.thumbnailWrapper:hover .playButton {
+    transform: scale(1.1);
+    opacity: 1;
+    background: rgba(0, 242, 254, 1);
+}
+
+.placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #111 0%, #222 100%);
+}
+
+.info {
+    width: 100%;
+    margin-top: 1.5rem;
+    text-align: left;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff 0%, #00f2fe 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.stats {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 800px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Fullscreen Native Support */
+.playerWrapper:fullscreen,
+.playerWrapper:-webkit-full-screen {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    border-radius: 0;
+    border: none;
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+}
+
+.hoverZone {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140px;
+    /* Centered tab, unblocking sides */
+    height: 40px;
+    z-index: 19;
+    background: transparent;
+    pointer-events: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 12px;
+}
+
+.mobileHandle {
+    width: 50px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    transition: background 0.3s;
+}
+
+.hoverZone:active .mobileHandle,
+.hoverZone:hover .mobileHandle {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+/* Mobile Hint */
+.mobileHint {
+    position: absolute;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    white-space: nowrap;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 6px 12px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.75rem;
+    pointer-events: none;
+    z-index: 100;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    animation: hintFade 5s forwards;
+    animation-delay: 1s;
+}
+
+@keyframes hintFade {
+    0% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+@media (min-width: 1024px) {
+    .mobileHint {
+        display: none !important;
+    }
+}
+
+.controlBar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 15px 20px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 20;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.controlBar.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.controlBar.hidden {
+    opacity: 0;
+    transform: translateY(100%);
+    pointer-events: none;
+}
+
+.leftControls,
+.rightControls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.controlBtn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    opacity: 0.8;
+    opacity: 0.8;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.controlBtn:hover {
+    opacity: 1;
+    color: var(--neon-cyan);
+    transform: scale(1.1);
+}
+
+.liveIndicator {
+    font-size: 0.8rem;
+    color: #ff0055;
+    font-weight: 700;
+    animation: blink 2s infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Waiting State Pulse */
+.waiting {
+    animation: pulseBorder 2s infinite ease-in-out;
+}
+
+@keyframes pulseBorder {
+    0% {
+        box-shadow: 0 0 0 rgba(0, 242, 254, 0);
+        border-color: rgba(0, 242, 254, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 30px rgba(0, 242, 254, 0.6);
+        border-color: rgba(0, 242, 254, 0.8);
+    }
+
+    100% {
+        box-shadow: 0 0 0 rgba(0, 242, 254, 0);
+        border-color: rgba(0, 242, 254, 0.2);
+    }
+}
+
+/* Volume Slider */
+.volumeContainer {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    /* Gap handled by expansion */
+    margin-right: 10px;
+    overflow: hidden;
+    min-width: 40px;
+    /* Protect icon from being clipped */
+    transition: all 0.3s ease;
+}
+
+.volumeSlider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 0;
+    /* Hidden by default */
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    transition: width 0.3s ease, margin 0.3s ease, opacity 0.3s ease;
+    background-image: linear-gradient(#00f2fe, #00f2fe);
+    /* Progress fill managed by React style bg-size */
+    background-repeat: no-repeat;
+    opacity: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.volumeSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.8);
+    transition: transform 0.1s;
+}
+
+.volumeSlider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+/* Show slider on hover of the container */
+.volumeContainer:hover .volumeSlider {
+    width: 80px;
+    margin-left: 10px;
+    opacity: 1;
+}
+
+/* Static Controls for Normal Mode */
+.staticControlBar {
+    width: 100%;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 242, 254, 0.1);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: -5px;
+    /* Pull up to connect with player */
+    position: relative;
+    z-index: 5;
+    backdrop-filter: blur(10px);
+}

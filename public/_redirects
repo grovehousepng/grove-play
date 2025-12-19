@@ -1,0 +1,3 @@
+# Netlify Redirects rules
+# Standard SPA fallback is not needed as we use custom not-found.tsx
+# which Next.js will export as 404.html. Netlify serves 404.html automatically.

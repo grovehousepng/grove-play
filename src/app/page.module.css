@@ -1,0 +1,68 @@
+.layout {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.gameContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-xl);
+  padding: 30px;
+  backdrop-filter: blur(10px);
+}
+
+.infoCol {
+  flex: 0 0 380px;
+  position: sticky;
+  top: 30px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: 0.1em;
+}
+
+.badge {
+  background: var(--neon-magenta);
+  color: white;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 0.7rem;
+  font-weight: 900;
+  box-shadow: 0 0 15px var(--neon-magenta);
+}
+
+@media (max-width: 1200px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .gameContent {
+    padding: 15px;
+  }
+
+  .infoCol {
+    flex: none;
+    width: 100%;
+    position: static;
+  }
+}

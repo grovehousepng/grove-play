@@ -1,0 +1,115 @@
+:root {
+  /* Cyberpunk Palette */
+  --bg-deep: #08040c;
+  --fg-bright: #ffffff;
+
+  /* Neon Glows */
+  --neon-cyan: #00f2ff;
+  --neon-magenta: #ff00ff;
+  --neon-purple: #bc13fe;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(10, 5, 20, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: blur(20px);
+
+  /* Radii */
+  --radius-xl: 32px;
+  --radius-lg: 20px;
+  --radius-pill: 50px;
+
+  /* Typography */
+  --font-main: var(--font-rajdhani), sans-serif;
+  --font-heading: var(--font-orbitron), sans-serif;
+}
+
+body {
+  background-color: var(--bg-deep);
+  color: var(--fg-bright);
+  font-family: var(--font-main);
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Nebula Background Effect */
+/* Custom Cyberpunk Background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url('/bg-neon-shapes.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -2;
+}
+
+/* Dark overlay for readability */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 8, 0.6);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+}
+
+/* Neon Shadow Utilities */
+.cyan-glow {
+  box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+}
+
+.magenta-glow {
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+}
+
+/* TV Focus Styling */
+*:focus-visible {
+  outline: none;
+  border: 3px solid var(--neon-cyan) !important;
+  box-shadow: 0 0 30px var(--neon-cyan) !important;
+  transform: scale(1.05) !important;
+  z-index: 10;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+}
+
+/* Global Container */
+.main-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 120px 20px 40px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+@media (max-width: 768px) {
+  .main-wrapper {
+    padding-top: 100px;
+    padding-left: 15px;
+    padding-right: 15px;
+    gap: 20px;
+  }
+}

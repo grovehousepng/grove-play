@@ -1,0 +1,38 @@
+.slider {
+    margin-bottom: 40px;
+}
+
+.title {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 25px;
+    text-transform: capitalize;
+}
+
+.sliderContainer {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scrollbar-width: none;
+}
+
+.sliderContainer::-webkit-scrollbar {
+    display: none;
+}
+
+.cardWrapper {
+    flex: 0 0 160px;
+}
+
+@media (max-width: 768px) {
+    .sliderContainer {
+        gap: 15px;
+    }
+
+    .cardWrapper {
+        flex: 0 0 140px;
+    }
+}
