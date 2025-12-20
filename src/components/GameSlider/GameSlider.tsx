@@ -6,9 +6,12 @@ interface GameSliderProps {
     games: Game[];
     title: string;
     onGameEmphasis?: (game: Game | null) => void;
+    onGameLeave?: () => void;
+    activeGameId?: string;
+    trendingSlugs?: string[];
 }
 
-export default function GameSlider({ games, title, onGameEmphasis }: GameSliderProps) {
+export default function GameSlider({ games, title, onGameEmphasis, onGameLeave, activeGameId, trendingSlugs }: GameSliderProps) {
     if (!games || games.length === 0) return null;
 
     return (
@@ -16,10 +19,13 @@ export default function GameSlider({ games, title, onGameEmphasis }: GameSliderP
             <h2 className={styles.title}>{title}</h2>
             <div className={styles.sliderContainer}>
                 {games.map((game) => (
-                    <div key={game.id} className={styles.cardWrapper}>
+                    <div key={game.slug} className={styles.cardWrapper}>
                         <GameCard
                             game={game}
                             onEmphasis={onGameEmphasis}
+                            onLeave={onGameLeave}
+                            isActive={activeGameId === game.slug}
+                            isTrending={trendingSlugs?.includes(game.slug)}
                         />
                     </div>
                 ))}

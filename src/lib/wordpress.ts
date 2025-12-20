@@ -4,15 +4,14 @@ const REST_URL = process.env.WORDPRESS_REST_API_URL || 'https://dev-grove-games.
 export async function fetchGraphQL(query: string, variables = {}, revalidate = 60, silent = false) {
   const headers = { 'Content-Type': 'application/json' };
 
-  // Cache busting for Pantheon/Varnish
-  // If we demand fresh data (revalidate=0), add a timestamp to the URL to bypass edge caches
+  // Cache busting via query param if revalidate is 0
   const cacheBuster = revalidate === 0 ? `?t=${Date.now()}` : '';
 
   const res = await fetch(API_URL + cacheBuster, {
     method: 'POST',
     headers,
     body: JSON.stringify({ query, variables }),
-    next: { revalidate },
+    // Removed 'next: { revalidate }' to avoid client-side issues with unknown props
   });
 
   const json = await res.json();
@@ -28,21 +27,35 @@ export async function fetchGraphQL(query: string, variables = {}, revalidate = 6
 }
 
 export interface Game {
-  id: string;
   databaseId: number;
   title: string;
   slug: string;
   gameUrl: string;
   thumbnailUrl: string;
   totalPlays: number;
-  gameWidth: number;
-  gameHeight: number;
+  gameWidth?: number;
+  gameHeight?: number;
+  commentStatus?: string;
+  comments?: {
+    nodes: Array<{
+      databaseId: number;
+      date: string;
+      content: string;
+      author: {
+        node: {
+          name: string;
+          avatar: {
+            url: string;
+          }
+        }
+      }
+    }>
+  };
   content: string; // HTML content from WordPress
 }
 
 const GAME_FIELDS_FRAGMENT = `
   fragment GameFields on Game {
-  id
   databaseId
   title
   slug
@@ -51,7 +64,7 @@ const GAME_FIELDS_FRAGMENT = `
   totalPlays
   gameWidth
   gameHeight
-  content
+  content(format: RENDERED)
 }
 `;
 
@@ -59,14 +72,14 @@ export async function getGames(limit = 100): Promise<Game[]> {
   const query = `
     ${GAME_FIELDS_FRAGMENT}
     query GetGames($first: Int) {
-  games(first: $first, where: { orderby: { field: DATE, order: DESC } }) {
+      games(first: $first, where: { orderby: { field: DATE, order: DESC } }) {
         edges {
           node {
             ...GameFields
+          }
+        }
       }
     }
-  }
-}
 `;
 
   try {
@@ -79,68 +92,76 @@ export async function getGames(limit = 100): Promise<Game[]> {
 }
 
 export async function getPopularGames(limit = 5): Promise<Game[]> {
-  const queryPopular = `
+  // Backend does not support sorting by TOTAL_PLAYS in GraphQL schema yet.
+  // We fetch a larger batch of recent games and sort them by totalPlays in memory.
+  const query = `
     ${GAME_FIELDS_FRAGMENT}
-    query GetPopularGames($first: Int) {
-  games(first: $first, where: { orderby: { field: TOTAL_PLAYS, order: DESC } }) {
+    query GetPopularGamesFallback($first: Int) {
+      games(first: $first, where: { orderby: { field: DATE, order: DESC } }) {
         edges {
           node {
             ...GameFields
-      }
-    }
-  }
-}
-`;
-
-  try {
-    // Try to fetch with TOTAL_PLAYS, but silence errors if it fails (plugin likely missing)
-    const data = await fetchGraphQL(queryPopular, { first: limit }, 60, true);
-    return data?.games?.edges?.map((edge: any) => edge.node) || [];
-  } catch (e) {
-    console.warn("Primary 'Popular' query failed (likely missing PHP plugin). Falling back to 'Date' sorting.");
-
-    // Fallback: Fetch by Date, THEN sort by Total Plays in memory
-    // This ensures we still show "Popular" games even if backend sorting fails
-    const queryFallback = `
-        ${GAME_FIELDS_FRAGMENT}
-        query GetPopularGamesFallback {
-          games(first: 60, where: { orderby: { field: DATE, order: DESC } }) {
-            edges {
-              node {
-                ...GameFields
-              }
-            }
           }
         }
-    `;
-    try {
-      const data = await fetchGraphQL(queryFallback, {});
-      const games = data?.games?.edges?.map((edge: any) => edge.node) || [];
-
-      // Client-side sort by totalPlays
-      games.sort((a: Game, b: Game) => (b.totalPlays || 0) - (a.totalPlays || 0));
-
-      return games.slice(0, limit);
-    } catch (e2) {
-      console.error("Fallback query failed too.", e2);
-      return [];
+      }
     }
+  `;
+
+  try {
+    // Fetch 60 games to have enough pool for sorting
+    const data = await fetchGraphQL(query, { first: 60 });
+    const games = data?.games?.edges?.map((edge: any) => edge.node) || [];
+
+    // Client-side sort by totalPlays
+    games.sort((a: Game, b: Game) => (b.totalPlays || 0) - (a.totalPlays || 0));
+
+    return games.slice(0, limit);
+  } catch (e) {
+    console.error("Failed to fetch popular games", e);
+    return [];
   }
 }
 
 export async function getGameBySlug(slug: string): Promise<Game | null> {
   const query = `
-    ${GAME_FIELDS_FRAGMENT}
-    query GetGameBySlug($id: ID!) {
-  game(id: $id, idType: SLUG) {
-        ...GameFields
-  }
-}
+    query GetGameDetails($slug: String!) {
+      game: gameBy(slug: $slug) {
+        databaseId
+        title
+        slug
+        content(format: RENDERED)
+        
+        # --- Custom Fields (Legacy CamelCase) ---
+        gameUrl
+        thumbnailUrl
+        totalPlays
+        gameWidth
+        gameHeight
+        
+        # --- Yorumlar Sistemi ---
+        commentStatus
+        comments(first: 50) {
+          nodes {
+            databaseId
+            date
+            content(format: RENDERED)
+            author {
+              node {
+                name
+                avatar {
+                  url
+                }
+              }
+            }
+          }
+        }
+      }
+    }
 `;
 
   try {
     // Revalidate 0 to ensure fresh play counts
-    const data = await fetchGraphQL(query, { id: slug }, 0);
+    const data = await fetchGraphQL(query, { slug }, 0);
     return data?.game || null;
   } catch (e) {
     console.error("Failed to fetch game by slug", e);
@@ -150,13 +171,16 @@ export async function getGameBySlug(slug: string): Promise<Game | null> {
 
 export async function incrementPlayCount(databaseId: number): Promise<void> {
   try {
-    // Direct Client-to-WP Call (Static Export Compatible)
-    // Note: This requires the WordPress server to allow CORS from the Netlify domain or *
-    fetch(`${REST_URL}/play/${databaseId}`, {
+    // New endpoint provided by user
+    // e.g. https://dev-grove-games.pantheonsite.io/wp-json/grove/v1/play
+    const endpoint = `${REST_URL.replace('/grove-api/v1', '/grove/v1')}/play`;
+
+    await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: databaseId.toString() }), // Backend expects 'id'
       cache: 'no-store'
-    }).catch(e => console.error("Increment play count fetch error", e));
+    });
   } catch (e) {
     console.error("Failed to increment play count", e);
   }

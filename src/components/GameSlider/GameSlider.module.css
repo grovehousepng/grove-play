@@ -17,6 +17,10 @@
     overflow-x: auto;
     padding-bottom: 10px;
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    align-items: flex-start;
+    /* Align varying heights to top */
 }
 
 .sliderContainer::-webkit-scrollbar {
@@ -27,6 +31,12 @@
     flex: 0 0 160px;
 }
 
+/* Feature the first game */
+.cardWrapper:first-child {
+    flex: 0 0 340px;
+    /* Double width + gap */
+}
+
 @media (max-width: 768px) {
     .sliderContainer {
         gap: 15px;
@@ -34,5 +44,10 @@
 
     .cardWrapper {
         flex: 0 0 140px;
+    }
+
+    .cardWrapper:first-child {
+        flex: 0 0 295px;
+        /* Double width + gap on mobile */
     }
 }

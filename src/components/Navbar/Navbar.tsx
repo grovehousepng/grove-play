@@ -13,26 +13,30 @@ const orbitron = Orbitron({
 
 export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollY = React.useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
+      // Throttle: Ignore small scroll deltas to prevent jitter
+      if (Math.abs(currentScrollY - lastScrollY.current) < 5) return;
+
       if (currentScrollY < 10) {
         setIsVisible(true);
-      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      } else if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
         setIsVisible(false); // Scrolling down & past threshold -> Hide
-      } else if (currentScrollY < lastScrollY) {
+      } else if (currentScrollY < lastScrollY.current) {
         setIsVisible(true); // Scrolling up -> Show
       }
 
-      setLastScrollY(currentScrollY);
+      lastScrollY.current = currentScrollY;
     };
 
-    window.addEventListener('scroll', handleScroll);
+    // Use passive listener for better scroll performance
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, []);
 
   return (
     <nav className={`${styles.navbar} ${!isVisible ? styles.navbarHidden : ''}`}>
@@ -45,7 +49,7 @@ export default function Navbar() {
           </div>
           <div className={styles.logoStack}>
             <span className={`${styles.logoTextTop} ${orbitron.className}`}>GROVE</span>
-            <span className={`${styles.logoTextBottom} ${orbitron.className}`}>PLAYS</span>
+            <span className={`${styles.logoTextBottom} ${orbitron.className}`}>PLAY</span>
           </div>
         </Link>
       </div>

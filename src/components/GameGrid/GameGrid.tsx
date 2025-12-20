@@ -6,9 +6,12 @@ interface GameGridProps {
     games: Game[];
     title?: string;
     onGameEmphasis?: (game: Game | null) => void;
+    onGameLeave?: () => void;
+    activeGameId?: string;
+    trendingSlugs?: string[];
 }
 
-export default function GameGrid({ games, title, onGameEmphasis }: GameGridProps) {
+export default function GameGrid({ games, title, onGameEmphasis, onGameLeave, activeGameId, trendingSlugs }: GameGridProps) {
     if (!games || games.length === 0) return null;
 
     return (
@@ -17,9 +20,12 @@ export default function GameGrid({ games, title, onGameEmphasis }: GameGridProps
             <div className={styles.grid}>
                 {games.map((game) => (
                     <GameCard
-                        key={game.id}
+                        key={game.slug}
                         game={game}
                         onEmphasis={onGameEmphasis}
+                        onLeave={onGameLeave}
+                        isActive={activeGameId === game.slug}
+                        isTrending={trendingSlugs?.includes(game.slug)}
                     />
                 ))}
             </div>

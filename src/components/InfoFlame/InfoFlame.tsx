@@ -78,31 +78,35 @@ const InfoFlame = ({ game, onClose }: InfoFlameProps) => {
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M6 12h4M8 10v4M15 13h.01M18 11h.01M10 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h6l2-2 2 2h6a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-6l-2 2-2-2Z" />
                     </svg>
-                    <span className={styles.logoText}>GROVE PLAYS</span>
+                    <span className={styles.logoText}>GROVE PLAY</span>
                 </div>
 
                 <h2 className={styles.sectionTitle}>{game ? 'GAME INFO' : 'ABOUT US'}</h2>
 
                 <div className={styles.content}>
                     {game ? (
-                        <div className={styles.activeContent}>
-                            <div className={styles.imageContainer} onClick={handlePlay}>
+                        <div key={game.slug} className={styles.activeContent}>
+                            <div className={styles.imageWrapper} onClick={handlePlay}>
                                 {game.thumbnailUrl && (
                                     <Image
                                         src={game.thumbnailUrl}
                                         alt={game.title}
-                                        width={game.gameWidth || 800}
-                                        height={game.gameHeight || 600}
-                                        className={styles.bgImage}
+                                        fill
+                                        className={styles.image} // Changed from bgImage to image to match CSS
                                         priority
-                                        style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
+                                        sizes="(max-width: 768px) 100vw, 400px"
                                     />
                                 )}
                             </div>
                             <div className={styles.details}>
                                 <h3 className={styles.gameTitle}>{game.title}</h3>
                                 <p className={styles.desc}>
-                                    {game.content ? game.content.replace(/<[^>]*>?/gm, '').slice(0, 300) : 'No description available.'}
+                                    {game.content ? (
+                                        <>
+                                            {game.content.replace(/<[^>]*>?/gm, '').slice(0, 180)}...
+                                            <span className={styles.readMore} onClick={handlePlay} role="button"> Read More</span>
+                                        </>
+                                    ) : 'No description available.'}
                                 </p>
 
                                 <button className={styles.contactBtn} onClick={handlePlay} disabled={isLoading}>
@@ -122,20 +126,22 @@ const InfoFlame = ({ game, onClose }: InfoFlameProps) => {
                                 </button>
 
                                 <div className={styles.stats}>
-                                    <span className={styles.pill}>Cyberpunk 2077</span>
-                                    <span className={styles.pill}>{game.totalPlays.toLocaleString()} Plays</span>
+                                    {(game.totalPlays || 0) > 5000 && (
+                                        <span className={styles.pill}>TOP RATED</span>
+                                    )}
+                                    <span className={styles.pill}>{(game.totalPlays || 0).toLocaleString()} Plays</span>
                                 </div>
                             </div>
                         </div>
                     ) : (
-                        <div className={styles.defaultContent}>
+                        <div key="default" className={styles.defaultContent}>
                             <Link href="/" className={styles.logoBox} style={{ textDecoration: 'none' }}>
                                 <div className={styles.logoIcon}>
                                     <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                         <path d="M6 12h4M8 10v4M15 13h.01M18 11h.01M10 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h6l2-2 2 2h6a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-6l-2 2-2-2Z" />
                                     </svg>
                                 </div>
-                                <h1 className={styles.logoName}>GROVE PLAYS</h1>
+                                <h1 className={styles.logoName}>GROVE PLAY</h1>
                             </Link>
                             <div className={styles.about}>
                                 <div className={styles.featureList}>
