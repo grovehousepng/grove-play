@@ -52,7 +52,7 @@ export default function NotFound() {
                 const data = await fetchGraphQL(query, { id: slug });
                 if (data?.game) {
                     setGame(data.game);
-                    document.title = `${data.game.title} - Grove Games`;
+                    document.title = `${data.game.title} - Grove Play`;
                 } else {
                     setError(true);
                 }
