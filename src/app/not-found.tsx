@@ -6,7 +6,10 @@ import GamePlayer from "@/components/GamePlayer/GamePlayer";
 import GameCommentForm from "@/components/GameCommentForm/GameCommentForm";
 import { fetchGraphQL, Game } from "@/lib/wordpress";
 
+import { usePathname } from 'next/navigation';
+
 export default function NotFound() {
+    const pathname = usePathname();
     const [slug, setSlug] = useState<string | null>(null);
     const [game, setGame] = useState<Game | null>(null);
     const [loading, setLoading] = useState(false);
@@ -14,8 +17,7 @@ export default function NotFound() {
     const [error, setError] = useState(false);
 
     useEffect(() => {
-        const pathname = window.location.pathname;
-        if (pathname.startsWith('/game/')) {
+        if (pathname && pathname.startsWith('/game/')) {
             setIsGameRoute(true);
             const parts = pathname.split('/').filter(Boolean);
             const extractedSlug = parts[parts.length - 1];
@@ -23,7 +25,7 @@ export default function NotFound() {
                 setSlug(extractedSlug);
             }
         }
-    }, []);
+    }, [pathname]);
 
     useEffect(() => {
         async function loadGame() {

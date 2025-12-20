@@ -76,9 +76,8 @@ body::after {
 /* TV Focus Styling */
 *:focus-visible {
   outline: none;
-  border: 3px solid var(--neon-cyan) !important;
-  box-shadow: 0 0 30px var(--neon-cyan) !important;
-  transform: scale(1.05) !important;
+  border: 2px solid var(--neon-cyan) !important;
+  box-shadow: 0 0 15px var(--neon-cyan) !important;
   z-index: 10;
 }
 

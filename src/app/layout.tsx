@@ -26,6 +26,15 @@ const orbitron = Orbitron({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
+import type { Viewport } from 'next';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export const metadata: Metadata = {
   title: "Grove Games | Cyberpunk Glassmorphism",
   description: "Modern high-end gaming portal",
