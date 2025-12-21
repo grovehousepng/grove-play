@@ -69,6 +69,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${rajdhani.variable} ${rajdhani.className} ${orbitron.variable} antialiased`}>
         {children}
+        <meta name="google-adsense-account" content="ca-pub-2751571048351009" />
         <Script
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2751571048351009"
           crossOrigin="anonymous"
