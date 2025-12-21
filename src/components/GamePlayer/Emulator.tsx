@@ -24,7 +24,8 @@ export default function Emulator({ gameUrl, core = 'segaMD', thumbnailUrl }: Emu
         // We use window as any to bypass TS checks for globals
         (window as any).EJS_player = '#game';
         (window as any).EJS_core = core; // e.g. 'segaMD', 'nes', 'gba'
-        (window as any).EJS_gameUrl = gameUrl;
+        // Use proxy to avoid CORS
+        (window as any).EJS_gameUrl = `/api/proxy-rom?url=${encodeURIComponent(gameUrl)}`;
         (window as any).EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
 
         // Optional configuration
