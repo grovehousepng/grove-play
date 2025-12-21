@@ -52,6 +52,8 @@ export interface Game {
     }>
   };
   content: string; // HTML content from WordPress
+  gameType?: string;
+  gameCategories?: string[]; // Backend returns [String]
 }
 
 const GAME_FIELDS_FRAGMENT = `
@@ -60,6 +62,8 @@ const GAME_FIELDS_FRAGMENT = `
   title
   slug
   gameUrl
+  gameType
+  gameCategories
   thumbnailUrl
   totalPlays
   gameWidth
@@ -133,6 +137,8 @@ export async function getGameBySlug(slug: string): Promise<Game | null> {
         
         # --- Custom Fields (Legacy CamelCase) ---
         gameUrl
+        gameType
+        gameCategories
         thumbnailUrl
         totalPlays
         gameWidth

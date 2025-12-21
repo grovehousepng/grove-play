@@ -4,14 +4,45 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { Game, incrementPlayCount } from '@/lib/wordpress';
 import styles from './GamePlayer.module.css';
+import Emulator from './Emulator';
 
 interface GamePlayerProps {
     game: Game;
 }
 
+const getCoreFromUrl = (url: string): string => {
+    if (!url) return 'segaMD';
+    const ext = url.split('.').pop()?.toLowerCase();
+    switch (ext) {
+        case 'md':
+        case 'bin':
+        case 'gen':
+            return 'segaMD'; // genesis_plus_gx default
+        case 'nes':
+            return 'nes';
+        case 'sfc':
+        case 'smc':
+            return 'snes';
+        case 'gba':
+            return 'gba';
+        case 'gb':
+        case 'gbc':
+            return 'gb';
+        case 'nds':
+            return 'nds';
+        case 'n64':
+        case 'z64':
+            return 'n64';
+        default:
+            return 'segaMD'; // Fallback
+    }
+};
+
 export default function GamePlayer({ game }: GamePlayerProps) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [viewCount, setViewCount] = useState(game.totalPlays);
+    const isEmulator = game.gameType === 'emulator';
+    const core = getCoreFromUrl(game.gameUrl);
 
     // Controls State
     const playerRef = useRef<HTMLDivElement>(null);
@@ -141,14 +172,24 @@ export default function GamePlayer({ game }: GamePlayerProps) {
                     </div>
                 ) : (
                     <>
-                        <iframe
-                            ref={iframeRef}
-                            className={styles.iframe}
-                            title={game.title}
-                            allowFullScreen
-                            scrolling="no"
-                            allow="autoplay; fullscreen; gyroscope; accelerometer"
-                        />
+                        {isEmulator ? (
+                            <div className={styles.iframe}>
+                                <Emulator
+                                    gameUrl={game.gameUrl}
+                                    core={core}
+                                    thumbnailUrl={game.thumbnailUrl}
+                                />
+                            </div>
+                        ) : (
+                            <iframe
+                                ref={iframeRef}
+                                className={styles.iframe}
+                                title={game.title}
+                                allowFullScreen
+                                scrolling="no"
+                                allow="autoplay; fullscreen; gyroscope; accelerometer"
+                            />
+                        )}
 
                         {/* Hover Zone for Fullscreen Bottom Detection */}
                         {isFullscreen && (
