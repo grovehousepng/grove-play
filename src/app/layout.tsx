@@ -55,6 +55,9 @@ export const metadata: Metadata = {
     site: '@groveplay', // Placeholder
     creator: '@groveplay',
   },
+  other: {
+    'google-adsense-account': 'ca-pub-2751571048351009',
+  },
 };
 
 export default function RootLayout({
@@ -69,7 +72,7 @@ export default function RootLayout({
         <Script
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2751571048351009"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
+          strategy="beforeInteractive"
         />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-HE6FW6PW1N"
