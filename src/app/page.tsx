@@ -1,123 +1,75 @@
-'use client';
+import { prisma } from "@/lib/db";
+import HomeClient from "./HomeClient";
 
-import { useState, useEffect, useRef } from 'react';
-import Navbar from "@/components/Navbar/Navbar";
-import GameGrid from "@/components/GameGrid/GameGrid";
-import GameSlider from "@/components/GameSlider/GameSlider";
-import InfoFlame from "@/components/InfoFlame/InfoFlame";
-import { getGames, getPopularGames, Game } from "@/lib/wordpress";
-import { useKeyNavigation } from "@/hooks/useKeyNavigation";
-import styles from "./page.module.css";
+// Force dynamic because we want fresh data (e.g. play counts) 
+// or use revalidate if we want some caching.
+export const revalidate = 0;
 
-export default function Home() {
-  useKeyNavigation();
-  const [popularGames, setPopularGames] = useState<Game[]>([]);
-  const [allGames, setAllGames] = useState<Game[]>([]);
-  const [activeGame, setActiveGame] = useState<Game | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+export default async function Home() {
+  try {
+    const games = await prisma.game.findMany(); // Fetch all to sort in memory
 
-  const [isLocked, setIsLocked] = useState(false);
-
-  const handleSetActiveGame = (game: Game | null) => {
-    if (isLocked && game !== null) return; // Prevent changing game if locked (unless clearing)
-
-    // Clear any pending timeout when a new game is selected
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
-    setActiveGame(game);
-  };
-
-  const handleGameLeave = () => {
-    if (isLocked) return;
-
-    // Determine if we are on desktop. If so, start timeout.
-    if (window.innerWidth > 1024) {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
-      timeoutRef.current = setTimeout(() => {
-        setActiveGame(null);
-        timeoutRef.current = null;
-      }, 5000);
-    }
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      // Parallel fetch: Newest for Slider, Popular for Grid
-      let [newest, popular] = await Promise.all([
-        getGames(20),       // 20 Newest games
-        getPopularGames(60) // 60 Most played games
-      ]);
-
-      // Fallback: If popular query fails (e.g. plugin missing data), fill grid with standard games
-      if (popular.length === 0) {
-        const fallback = await getGames(80);
-        popular = fallback.slice(20);
-      }
-
-      setPopularGames(newest);
-      setAllGames(popular);
-      console.log("Fetched New Games:", newest.map(g => g.title));
+    // Heuristic for "World Popularity" based on title keywords
+    const getPopularityScore = (title: string) => {
+      const t = title.toLowerCase();
+      if (t.includes('pokemon')) return 100;
+      if (t.includes('mario')) return 90;
+      if (t.includes('zelda')) return 85;
+      if (t.includes('sonic')) return 80;
+      if (t.includes('gta')) return 75;
+      if (t.includes('grand theft auto')) return 75;
+      if (t.includes('dragon ball')) return 70;
+      if (t.includes('metal slug')) return 65;
+      if (t.includes('street fighter')) return 60;
+      if (t.includes('mortal kombat')) return 60;
+      if (t.includes('tekken')) return 60;
+      if (t.includes('crash bandicoot')) return 55;
+      if (t.includes('donkey kong')) return 50;
+      if (t.includes('kirby')) return 45;
+      if (t.includes('final fantasy')) return 40;
+      if (t.includes('castlevania')) return 35;
+      if (t.includes('metroid')) return 35;
+      if (t.includes('mega man')) return 30;
+      if (t.includes('pac-man')) return 25;
+      if (t.includes('tetris')) return 25;
+      if (t.includes('doom')) return 20;
+      return 0;
     };
-    fetchData();
-  }, []);
 
-  // Determine Top 5 Trending Games based on current data
-  const trendingSlugs = allGames.slice(0, 5).map(g => g.slug);
+    // Sort: 1. PlayCount (Desc) -> 2. Popularity Score (Desc) -> 3. Title (Asc)
+    games.sort((a, b) => {
+      if (b.playCount !== a.playCount) return b.playCount - a.playCount;
 
-  return (
-    <div className="main-wrapper" onClick={() => handleSetActiveGame(null)}>
-      <Navbar />
+      const scoreA = getPopularityScore(a.title);
+      const scoreB = getPopularityScore(b.title);
+      if (scoreB !== scoreA) return scoreB - scoreA;
 
-      <div className={styles.layout} onClick={(e) => e.stopPropagation()}>
-        {/* Left Panel: Game Content */}
-        <div className={styles.gameContent}>
-          <div className={styles.section}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.title}>NEW GAMES</h2>
-              <span className={styles.badge}>FRESH</span>
-            </div>
-            <GameSlider
-              title=""
-              games={popularGames}
-              onGameEmphasis={handleSetActiveGame}
-              onGameLeave={handleGameLeave}
-              activeGameId={activeGame?.slug}
-              trendingSlugs={trendingSlugs}
-            />
-          </div>
+      return a.title.localeCompare(b.title);
+    });
 
-          <div className={styles.section}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.title}>POPULAR</h2>
-            </div>
-            <GameGrid
-              games={allGames} // Display remaining games
-              onGameEmphasis={handleSetActiveGame}
-              onGameLeave={handleGameLeave}
-              activeGameId={activeGame?.slug}
-              trendingSlugs={trendingSlugs}
-            />
-          </div>
-        </div>
+    // Map Prisma DB structure to Frontend Game Interface
+    const mappedGames = games.map((g) => ({
+      databaseId: g.id,
+      title: g.title,
+      slug: g.slug,
+      gameUrl: g.gameUrl,
+      thumbnailUrl: g.thumbnailUrl || '',
+      totalPlays: g.playCount || 0,
+      gameType: g.gameType || 'emulator', // Ensure string
+      gameWidth: 0,
+      gameHeight: 0,
+      content: g.description || '',
+    }));
 
-        {/* Right Panel: Info Flame */}
-        <aside
-          className={styles.infoCol}
-          onMouseEnter={() => {
-            setIsLocked(true);
-            if (timeoutRef.current) clearTimeout(timeoutRef.current);
-          }}
-          onMouseLeave={() => setIsLocked(false)}
-        >
-          <InfoFlame
-            game={activeGame}
-            onClose={() => handleSetActiveGame(null)}
-          />
-        </aside>
+    return <HomeClient initialGames={mappedGames} />;
+  } catch (error: any) {
+    console.error("Home Error:", error);
+    return (
+      <div style={{ color: 'red', padding: '50px', whiteSpace: 'pre-wrap' }}>
+        <h1>Veritabanı Hatası</h1>
+        <p>{error.message}</p>
+        <p>{JSON.stringify(error, null, 2)}</p>
       </div>
-    </div>
-  );
+    );
+  }
 }

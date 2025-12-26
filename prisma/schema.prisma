@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Game {
+  id           Int      @id @default(autoincrement())
+  title        String
+  slug         String   @unique
+  description  String?
+  gameType     String   @default("emulator") // emulator, embed
+  gameUrl      String   // Path like /roms/sonic.md
+  thumbnailUrl String?
+  categories   String?  // Stored as simple string "Action, Adventure"
+  playCount    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  comments     Comment[]
+  ratings      Rating[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  author    String   @default("Anonymous")
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  gameId    Int
+  game      Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+}
+
+model Rating {
+  id        Int      @id @default(autoincrement())
+  value     Int
+  createdAt DateTime @default(now())
+  gameId    Int
+  game      Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+}

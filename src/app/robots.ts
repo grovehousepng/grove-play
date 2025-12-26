@@ -5,8 +5,8 @@ export default function robots(): MetadataRoute.Robots {
         rules: {
             userAgent: '*',
             allow: '/',
-            disallow: '/private/',
+            disallow: ['/admin/', '/api/'],
         },
-        sitemap: 'https://groveplay.com/sitemap.xml', // Update domain before launch if known, otherwise relative works in some contexts but full is better. Using placeholder based on context.
+        sitemap: 'https://groveplay.com/sitemap.xml',
     };
 }

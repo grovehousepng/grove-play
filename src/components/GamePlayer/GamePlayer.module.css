@@ -21,8 +21,9 @@
     border: 1px solid rgba(0, 242, 254, 0.1);
 }
 
-/* When in normal mode with static controls below, flatten bottom corners */
-.playerWrapper:not(:fullscreen):not(:-webkit-full-screen) {
+/* When in normal mode with static controls below, flatten bottom corners
+   BUT skip this if it is an emulator (which has no controls below) */
+.playerWrapper:not(:fullscreen):not(:-webkit-full-screen):not(.emulator) {
     border-radius: 12px 12px 0 0;
     border-bottom: none;
 }

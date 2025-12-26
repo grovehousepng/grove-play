@@ -179,14 +179,16 @@ export async function incrementPlayCount(databaseId: number): Promise<void> {
   try {
     // New endpoint provided by user
     // e.g. https://dev-grove-games.pantheonsite.io/wp-json/grove/v1/play
-    const endpoint = `${REST_URL.replace('/grove-api/v1', '/grove/v1')}/play`;
+    // const endpoint = `${REST_URL.replace('/grove-api/v1', '/grove/v1')}/play`;
 
+    /*
     await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: databaseId.toString() }), // Backend expects 'id'
       cache: 'no-store'
     });
+    */
   } catch (e) {
     console.error("Failed to increment play count", e);
   }

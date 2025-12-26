@@ -53,12 +53,19 @@ export default function GamePlayer({ game }: GamePlayerProps) {
     const [showControls, setShowControls] = useState(false);
     const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const handlePlay = () => {
         if (game.databaseId) {
             incrementPlayCount(game.databaseId);
         }
         setViewCount(prev => prev + 1);
         setIsPlaying(true);
+        setIsLoading(true); // Start loading
+    };
+
+    const handleGameLoad = () => {
+        setIsLoading(false);
     };
 
     const getCleanUrl = (url: string) => {
@@ -141,14 +148,46 @@ export default function GamePlayer({ game }: GamePlayerProps) {
         <div className={styles.container}>
             <div
                 ref={playerRef}
-                className={`${styles.playerWrapper} ${isFullscreen ? styles.fullscreen : ''} ${!isPlaying ? styles.waiting : ''}`}
+                className={`${styles.playerWrapper} ${isFullscreen ? styles.fullscreen : ''} ${!isPlaying ? styles.waiting : ''} ${isEmulator ? styles.emulator : ''}`}
                 style={{
-                    aspectRatio: isFullscreen ? 'auto' : `${game.gameWidth || 16} / ${game.gameHeight || 9}`,
-                    maxWidth: (game.gameWidth && !isFullscreen) ? `${game.gameWidth}px` : '100%'
+                    aspectRatio: (isFullscreen || isEmulator) ? 'auto' : `${game.gameWidth || 16} / ${game.gameHeight || 9}`,
+                    maxWidth: (game.gameWidth && !isFullscreen && !isEmulator) ? `${game.gameWidth}px` : '100%',
+                    height: isEmulator && !isFullscreen ? '600px' : undefined
                 }}
                 onMouseMove={() => isFullscreen && setShowControls(true)}
                 onMouseLeave={() => isFullscreen && setShowControls(false)}
             >
+                {/* LOADING SCREEN OVERLAY */}
+                {isLoading && isPlaying && (
+                    <div className={styles.loadingOverlay} style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: '#0a0a0a',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 20,
+                        color: 'white'
+                    }}>
+                        <div className="spinner" style={{
+                            width: '40px',
+                            height: '40px',
+                            border: '4px solid rgba(255,255,255,0.1)',
+                            borderTop: '4px solid #ff0055',
+                            borderRadius: '50%',
+                            animation: 'spin 1s linear infinite'
+                        }}></div>
+                        <p style={{ marginTop: '15px', fontFamily: 'var(--font-orbitron)', letterSpacing: '2px', fontSize: '0.9rem' }}>LOADING GAME...</p>
+                        <style jsx>{`
+                            @keyframes spin {
+                                0% { transform: rotate(0deg); }
+                                100% { transform: rotate(360deg); }
+                            }
+                        `}</style>
+                    </div>
+                )}
+
                 {!isPlaying ? (
                     <div className={styles.thumbnailWrapper} onClick={handlePlay}>
                         {game.thumbnailUrl ? (
@@ -178,6 +217,7 @@ export default function GamePlayer({ game }: GamePlayerProps) {
                                     gameUrl={game.gameUrl}
                                     core={core}
                                     thumbnailUrl={game.thumbnailUrl}
+                                    onLoad={handleGameLoad}
                                 />
                             </div>
                         ) : (
@@ -188,6 +228,7 @@ export default function GamePlayer({ game }: GamePlayerProps) {
                                 allowFullScreen
                                 scrolling="no"
                                 allow="autoplay; fullscreen; gyroscope; accelerometer"
+                                onLoad={handleGameLoad}
                             />
                         )}
 
@@ -251,37 +292,39 @@ export default function GamePlayer({ game }: GamePlayerProps) {
                 )}
             </div>
 
-            {/* Static Controls for Normal Mode */}
-            {!isFullscreen && isPlaying && (
-                <div className={styles.staticControlBar}>
-                    <div className={styles.leftControls}>
-                        <span className={styles.liveIndicator}>● LIVE</span>
-                    </div>
-                    <div className={styles.rightControls}>
-                        <div className={styles.volumeContainer}>
-                            <button onClick={toggleMute} className={styles.controlBtn}>
-                                {isMuted || volume === 0 ? (
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 5L6 9H2v6h4l5 4V5z" /><line x1="23" y1="9" x2="17" y2="15" /><line x1="17" y1="9" x2="23" y2="15" /></svg>
-                                ) : (
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-                                )}
-                            </button>
-                            <input
-                                type="range"
-                                min="0"
-                                max="100"
-                                value={volume}
-                                onChange={handleVolumeChange}
-                                className={styles.volumeSlider}
-                                style={{ backgroundSize: `${volume}% 100%` }}
-                            />
+            {/* Static Controls for Normal Mode - HIDE for Emulator to avoid gaps/redundancy */}
+            {
+                !isFullscreen && isPlaying && !isEmulator && (
+                    <div className={styles.staticControlBar}>
+                        <div className={styles.leftControls}>
+                            <span className={styles.liveIndicator}>● LIVE</span>
                         </div>
-                        <button onClick={toggleFullscreen} className={styles.controlBtn}>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" /></svg>
-                        </button>
+                        <div className={styles.rightControls}>
+                            <div className={styles.volumeContainer}>
+                                <button onClick={toggleMute} className={styles.controlBtn}>
+                                    {isMuted || volume === 0 ? (
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 5L6 9H2v6h4l5 4V5z" /><line x1="23" y1="9" x2="17" y2="15" /><line x1="17" y1="9" x2="23" y2="15" /></svg>
+                                    ) : (
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                                    )}
+                                </button>
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value={volume}
+                                    onChange={handleVolumeChange}
+                                    className={styles.volumeSlider}
+                                    style={{ backgroundSize: `${volume}% 100%` }}
+                                />
+                            </div>
+                            <button onClick={toggleFullscreen} className={styles.controlBtn}>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" /></svg>
+                            </button>
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             <div className={styles.info}>
                 <h1 className={styles.title}>{game.title}</h1>
@@ -314,6 +357,6 @@ export default function GamePlayer({ game }: GamePlayerProps) {
                     </p>
                 )}
             </div>
-        </div>
+        </div >
     );
 }

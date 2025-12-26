@@ -1,31 +1,30 @@
 import { MetadataRoute } from 'next';
-import { getGames } from '@/lib/wordpress';
+import { prisma } from '@/lib/db';
+
+const BASE_URL = 'https://groveplay.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = 'https://groveplay.com'; // Production URL
+    const games = await prisma.game.findMany({
+        select: {
+            slug: true,
+            updatedAt: true,
+        },
+        take: 50000, // Reasonable limit
+    });
 
-    // effective limit 1000 for sitemap in this example, adjust helper if needed
-    const games = await getGames(1000);
-
-    const gameUrls = games.map((game) => ({
-        url: `${baseUrl}/game/${game.slug}`,
-        lastModified: new Date(),
+    const gameUrls = games.map((game: { slug: string; updatedAt: Date }) => ({
+        url: `${BASE_URL}/game/${game.slug}`,
+        lastModified: game.updatedAt,
         changeFrequency: 'weekly' as const,
         priority: 0.8,
     }));
 
     return [
         {
-            url: baseUrl,
+            url: BASE_URL,
             lastModified: new Date(),
             changeFrequency: 'daily',
-            priority: 1,
-        },
-        {
-            url: `${baseUrl}/about`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.5,
+            priority: 1.0,
         },
         ...gameUrls,
     ];
