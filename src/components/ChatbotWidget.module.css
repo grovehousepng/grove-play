@@ -1,0 +1,271 @@
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-family: var(--font-inter), sans-serif;
+    padding-top: 10px;
+    /* Space for popup shadow if needed */
+}
+
+.popup {
+    position: absolute;
+    bottom: calc(100% + 1rem);
+    /* Appears above the FAB */
+    right: 0;
+    width: 380px;
+    height: 600px;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    /* Ensure it's above other elements */
+}
+
+.header {
+    padding: 1.5rem;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.05), transparent);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.titleGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.name {
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.brand {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Chat Interface */
+.messagesContainer {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.messageRow {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    max-width: 85%;
+}
+
+.botRow {
+    align-self: flex-start;
+}
+
+.userRow {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.messageBubble {
+    padding: 1rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    position: relative;
+}
+
+.botBubble {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-bottom-left-radius: 2px;
+}
+
+.userBubble {
+    background: #fff;
+    color: #000;
+    border-bottom-right-radius: 2px;
+}
+
+.inputArea {
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    gap: 0.5rem;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 0.75rem 1rem;
+    color: #fff;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.input:focus {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.sendButton {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    color: #000;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sendButton:hover:not(:disabled) {
+    transform: scale(1.05);
+    background: #f0f0f0;
+}
+
+.sendButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Lead Form */
+.formContainer {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.formHeader {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.formTitle {
+    color: #fff;
+    font-size: 1.5rem;
+    font-family: var(--font-bebas);
+    margin-bottom: 0.5rem;
+}
+
+.formSubtitle {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.label {
+    color: #fff;
+    font-size: 0.85rem;
+    margin-left: 0.5rem;
+}
+
+.formInput {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.formInput:focus {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.submitButton {
+    margin-top: 1rem;
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1rem;
+}
+
+.submitButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* FAB */
+.fab {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #fff;
+    color: #000;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    position: relative;
+    z-index: 51;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+    .container {
+        bottom: 1rem;
+        right: 1rem;
+    }
+
+    .popup {
+        width: calc(100vw - 2rem);
+        height: calc(100vh - 100px);
+        position: fixed;
+        bottom: 5rem;
+        right: 1rem;
+    }
+}

@@ -1,0 +1,127 @@
+.container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFFFFF;
+    position: relative;
+    overflow: hidden;
+    padding: 24px;
+    text-align: center;
+}
+
+.content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+}
+
+.errorCode {
+    font-family: var(--font-bebas), sans-serif;
+    font-size: clamp(5rem, 15vw, 10rem);
+    line-height: 1;
+    color: #F5F5F7;
+    display: block;
+    margin-bottom: -40px;
+    font-weight: 400;
+}
+
+.title {
+    font-family: var(--font-bebas), sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1.1;
+    color: #1D1D1F;
+    margin-bottom: 24px;
+    letter-spacing: 0.04em;
+}
+
+.description {
+    font-size: 1.2rem;
+    color: #86868B;
+    margin-bottom: 48px;
+    line-height: 1.6;
+}
+
+.actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.homeBtn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #1D1D1F;
+    color: white;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.homeBtn:hover {
+    background: #333;
+    transform: translateY(-2px);
+}
+
+.servicesBtn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    color: #1D1D1F;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid #1D1D1F;
+    transition: all 0.2s ease;
+}
+
+.servicesBtn:hover {
+    background: #1D1D1F;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.decorations {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.blob {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0, 113, 227, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    filter: blur(40px);
+}
+
+@media (max-width: 600px) {
+    .errorCode {
+        margin-bottom: -20px;
+    }
+
+    .actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .homeBtn,
+    .servicesBtn {
+        width: 100%;
+        justify-content: center;
+    }
+}

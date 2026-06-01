@@ -1,0 +1,110 @@
+.article {
+    max-width: 800px;
+    margin: 120px auto 60px;
+    padding: 0 20px;
+    line-height: 1.8;
+    color: #333;
+}
+
+.header {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.meta {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.title {
+    font-family: var(--font-bebas);
+    font-size: 3.5rem;
+    line-height: 1.1;
+    color: #0A0A0A;
+    margin-bottom: 20px;
+}
+
+.content h2 {
+    font-family: var(--font-bebas);
+    font-size: 2rem;
+    margin: 40px 0 20px;
+    color: #0A0A0A;
+}
+
+.content p {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+.ctaBox {
+    background: #0A0A0A;
+    color: white;
+    padding: 40px;
+    border-radius: 20px;
+    margin-top: 60px;
+    text-align: center;
+}
+
+.ctaBox h3 {
+    font-family: var(--font-bebas);
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+.ctaBox p {
+    margin-bottom: 25px;
+    opacity: 0.8;
+}
+
+.ctaButton {
+    display: inline-block;
+    background: white;
+    color: black;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.ctaButton:hover {
+    transform: translateY(-3px);
+}
+
+.faq {
+    max-width: 800px;
+    margin: 0 auto 120px;
+    padding: 0 20px;
+}
+
+.faq h2 {
+    font-family: var(--font-bebas);
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+}
+
+.faqItem {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.faqItem h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #0A0A0A;
+}
+
+.faqItem p {
+    color: #555;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 2.5rem;
+    }
+}

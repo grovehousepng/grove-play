@@ -1,0 +1,116 @@
+.sliderSection {
+    background: #FFFFFF;
+    padding: 20px 0 60px 0; /* Reduced top padding since wave covers it */
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.waveWrapper {
+    width: 100%;
+    margin-bottom: 40px; /* Space between wave and logos */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.subtitle {
+    text-align: center;
+    font-family: var(--font-inter), 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #888;
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+}
+
+.slider {
+    position: relative;
+    width: 100%;
+    margin: auto;
+    overflow: hidden;
+}
+
+/* Optional: Gradient masks on sides for a fading effect */
+.slider::before,
+.slider::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 150px;
+    height: 100%;
+    z-index: 2;
+}
+
+.slider::before {
+    left: 0;
+    background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.slider::after {
+    right: 0;
+    background: linear-gradient(to left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.slideTrack {
+    display: flex;
+    width: calc(360px * 28); /* Increased width per slide */
+    animation: scroll 65s linear infinite;
+    gap: 40px;
+    align-items: center;
+}
+
+.slideTrack:hover {
+    animation-play-state: paused;
+}
+
+.slide {
+    height: 160px; /* Increased native height */
+    width: 320px; /* Kept wide enough */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.logoImage {
+    max-width: 280px; 
+    max-height: 140px; 
+    filter: grayscale(100%) opacity(60%);
+    transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.slide:hover .logoImage {
+    filter: grayscale(0%) opacity(100%);
+    transform: scale(1.05);
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        /* Shift by the exact half (total width of 14 logos + gaps) */
+        transform: translateX(calc(-360px * 14 - 40px * 14));
+    }
+}
+
+@media (max-width: 768px) {
+    .sliderSection {
+        padding: 40px 0;
+    }
+    .slider::before, .slider::after {
+        width: 60px;
+    }
+    .logoImage {
+        max-width: 220px;
+        max-height: 100px;
+    }
+    .slideTrack {
+        animation-duration: 40s;
+    }
+}

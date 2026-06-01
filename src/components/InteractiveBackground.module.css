@@ -1,0 +1,13 @@
+.canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    /* Behind content */
+    pointer-events: none;
+    /* Let clicks pass through, but we track mouse via window listener */
+    background: transparent;
+    /* Assuming LiquidBackground handles the gradient/color */
+}

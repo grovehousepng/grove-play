@@ -1,0 +1,170 @@
+.hero {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 120px 20px 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Floating decorative shapes */
+.floatingShape1 {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 50%;
+    top: 15%;
+    right: 10%;
+    pointer-events: none;
+}
+
+.floatingShape2 {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, transparent 100%);
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    top: 25%;
+    left: 5%;
+    pointer-events: none;
+}
+
+.floatingShape3 {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border: 2px solid rgba(0, 0, 0, 0.04);
+    border-radius: 50%;
+    bottom: 20%;
+    right: 15%;
+    pointer-events: none;
+}
+
+.title {
+    font-family: var(--font-bebas), 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 6vw, 5rem);
+    font-weight: 400;
+    line-height: 1;
+    color: #0A0A0A;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 1;
+    max-width: 100%;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+}
+
+.line1 {
+    display: inline-block;
+}
+
+.line2 {
+    display: inline-block;
+    color: #333;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 550px;
+    line-height: 1.8;
+    margin-bottom: 48px;
+    position: relative;
+    z-index: 1;
+}
+
+.cta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+.primaryBtn {
+    background: #0A0A0A;
+    color: white;
+    padding: 18px 36px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.primaryBtn:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+.secondaryBtn {
+    background: transparent;
+    color: #0A0A0A;
+    padding: 18px 36px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    border: 2px solid #E0E0E0;
+    transition: all 0.3s ease;
+}
+
+.secondaryBtn:hover {
+    border-color: #0A0A0A;
+    background: #F5F5F5;
+}
+
+/* Scroll indicator */
+.scrollIndicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.scrollLine {
+    display: block;
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, #0A0A0A, transparent);
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 100px 16px 60px;
+    }
+
+    .floatingShape1,
+    .floatingShape2,
+    .floatingShape3 {
+        display: none;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    .cta {
+        flex-direction: column;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .primaryBtn,
+    .secondaryBtn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .scrollIndicator {
+        bottom: 20px;
+    }
+
+    .scrollLine {
+        height: 40px;
+    }
+}

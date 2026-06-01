@@ -1,0 +1,158 @@
+.section {
+    padding: 100px 0;
+    background: #0A0A0A;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.content {
+    color: white;
+}
+
+.label {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+}
+
+.title {
+    font-family: var(--font-bebas), 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.desc {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.7;
+    margin-bottom: 32px;
+}
+
+.features {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1rem;
+    color: white;
+}
+
+.check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    font-size: 0.8rem;
+}
+
+/* Form */
+.formWrapper {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.input,
+.textarea {
+    padding: 16px 20px;
+    border: 2px solid #E8E8E8;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+    width: 100%;
+}
+
+.input:focus,
+.textarea:focus {
+    outline: none;
+    border-color: #1A1A1A;
+}
+
+.textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.button {
+    background: #0A0A0A;
+    color: white;
+    padding: 18px 32px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.button:hover {
+    background: #333;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 900px) {
+    .container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .section {
+        padding: 60px 0;
+    }
+
+    .formWrapper {
+        padding: 24px;
+    }
+}
+
+.successWrapper {
+    background: white;
+    padding: 60px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.successTitle {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 16px;
+}
+
+.successDesc {
+    font-size: 1.1rem;
+    color: #666;
+}

@@ -1,0 +1,36 @@
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.svg {
+    width: 100%;
+    height: auto;
+}
+
+/* Size variants */
+.small {
+    width: 120px;
+    height: auto;
+}
+
+.normal {
+    width: 280px;
+    height: auto;
+}
+
+.large {
+    width: 380px;
+    height: auto;
+}
+
+/* Dark Variant (Forces Black Logo) */
+.dark {
+    filter: brightness(0);
+}
+
+/* Light Variant (Forces White Logo) */
+.light {
+    filter: brightness(0) invert(1);
+}

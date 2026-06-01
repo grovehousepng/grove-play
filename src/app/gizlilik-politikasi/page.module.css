@@ -1,0 +1,55 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 120px 20px 60px;
+    font-family: inherit;
+    line-height: 1.6;
+    color: var(--text);
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: var(--heading);
+    text-align: center;
+}
+
+.content {
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.content h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--heading);
+}
+
+.content p {
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+}
+
+.content ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+}
+
+.content li {
+    margin-bottom: 0.5rem;
+}
+
+/* Dark mode adjustments (assuming CSS variables handle most of this) */
+@media (prefers-color-scheme: dark) {
+    .content {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}

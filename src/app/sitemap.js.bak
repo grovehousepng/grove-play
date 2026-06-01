@@ -1,0 +1,28 @@
+import { sectors } from '../data/sectors';
+
+const baseUrl = 'https://grovemediacreative.com.tr';
+
+export default async function sitemap() {
+    const sectorUrls = sectors.map((sector) => ({
+        url: `${baseUrl}/hizmet/${sector.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+    }));
+
+    return [
+        {
+            url: baseUrl,
+            lastModified: new Date(),
+            changeFrequency: 'yearly',
+            priority: 1,
+        },
+        {
+            url: `${baseUrl}/hakkimizda`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.8,
+        },
+        ...sectorUrls,
+    ];
+}

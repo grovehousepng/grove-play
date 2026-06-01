@@ -1,0 +1,156 @@
+.section {
+    padding: 100px 0;
+    background: white;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.content {
+    padding-right: 40px;
+}
+
+.label {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #666;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+}
+
+.title {
+    font-family: var(--font-bebas), 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+    color: #0A0A0A;
+    margin-bottom: 20px;
+}
+
+.description {
+    font-size: 1.1rem;
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 32px;
+}
+
+.stats {
+    display: flex;
+    gap: 32px;
+}
+
+.statItem {
+    text-align: center;
+}
+
+.statNumber {
+    display: block;
+    font-family: var(--font-bebas), 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    color: #0A0A0A;
+    margin-bottom: 4px;
+}
+
+.statLabel {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+/* Sectors */
+/* Sectors */
+.sectors {
+    width: 100%;
+    position: relative;
+}
+
+.sectorsHeader {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 0;
+    /* Remove margin when closed, will add logic or keeping it small */
+}
+
+.sectorsTitle {
+    font-family: var(--font-bebas), 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    color: #0A0A0A;
+    margin: 0;
+    text-align: left;
+}
+
+.sectorGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding-top: 20px;
+    /* Add padding only when open */
+}
+
+.sector {
+    background: white;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #333;
+    border: 1px solid #E8E8E8;
+    transition: all 0.2s ease;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sector:hover {
+    border-color: #1A1A1A;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 900px) {
+    .container {
+        grid-template-columns: 1fr;
+        gap: 60px;
+        /* Increased gap for better separation */
+        padding-bottom: 40px;
+    }
+
+    .content {
+        padding-right: 0;
+    }
+
+    .stats {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 40px;
+        /* Increased gap between stats */
+    }
+}
+
+@media (max-width: 480px) {
+    .section {
+        padding: 80px 0;
+        /* Increased section padding */
+    }
+
+    .stats {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .sectorGrid {
+        grid-template-columns: 1fr;
+    }
+}

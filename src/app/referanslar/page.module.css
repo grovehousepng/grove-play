@@ -1,0 +1,169 @@
+.pageContainer {
+    min-height: 100vh;
+    background: #fafafa;
+}
+
+.heroSection {
+    background: #0A0A0A;
+    padding: 180px 0 100px;
+    text-align: center;
+    position: relative;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.title {
+    font-family: var(--font-bebas), 'Bebas Neue', sans-serif;
+    font-size: 5rem;
+    color: #FFFFFF;
+    margin-bottom: 24px;
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    font-family: var(--font-inter), 'Inter', sans-serif;
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.8;
+}
+
+.gridSection {
+    padding: 100px 0;
+    background: #fafafa;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.gridItem {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 20px; /* Reduced padding to give logos more space */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.gridItem:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+}
+
+.imageWrapper {
+    position: relative;
+    width: 100%;
+    height: 160px; /* Increased height to make logos naturally larger */
+    transition: filter 0.3s ease, transform 0.3s ease;
+    filter: grayscale(100%);
+}
+
+.gridItem:hover .imageWrapper {
+    filter: grayscale(0%);
+    transform: scale(1.05); /* Slight native hover without dynamic scale */
+}
+
+@media (max-width: 768px) {
+    .heroSection {
+        padding: 140px 0 80px;
+    }
+    
+    .title {
+        font-size: 3.5rem;
+    }
+    
+    .subtitle {
+        font-size: 1.05rem;
+    }
+    
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    
+    .gridItem {
+        padding: 24px;
+    }
+    
+    .imageWrapper {
+        height: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(245, 245, 245, 0.98);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    padding: 20px;
+}
+
+.modalContent {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    height: 400px;
+    background: #FFFFFF;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08); /* Yumuşak gölge */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+}
+
+.modalImageWrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.closeButton {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #111;
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.closeButton:hover {
+    transform: rotate(90deg);
+    background: #e0e0e0;
+}
